@@ -13,6 +13,8 @@ Below is a `.gitignore` that **excludes everything** by default, but **allows** 
 !.gitignore
 !requirements.txt
 !main_gui_v2.py
-!resources/
-!dist/
-!output/
+!resources/background.png
+!resource/logo.ico
+!dist/Magic Boar Kafka Connector.exe
+!Output/Magic Boar Kafka Connector-Setup.exe
+!README.MD
