@@ -1,0 +1,18 @@
+
+---
+
+## .gitignore
+
+Below is a `.gitignore` that **excludes everything** by default, but **allows** `requirements.txt`, `main_gui_v2.py`, the `resources` folder, plus the `dist` and `output` folders, so you can commit the built EXEs/installers if you’d like.
+
+```gitignore
+# Ignore everything...
+*
+
+# Except these:
+!.gitignore
+!requirements.txt
+!main_gui_v2.py
+!resources/
+!dist/
+!output/

@@ -1,0 +1,2 @@
+PyQt5==5.15.9
+kafka-python-ng==2.2.2
