@@ -1,20 +1,22 @@
-
----
-
-## .gitignore
-
-Below is a `.gitignore` that **excludes everything** by default, but **allows** `requirements.txt`, `main_gui_v2.py`, the `resources` folder, plus the `dist` and `output` folders, so you can commit the built EXEs/installers if you’d like.
-
-```gitignore
-# Ignore everything...
+# Ignore everything by default
 *
 
-# Except these:
+# Unignore this .gitignore file
 !.gitignore
+
+# Unignore core files
 !requirements.txt
 !main_gui_v2.py
-!resources/background.png
-!resource/logo.ico
-!dist/Magic Boar Kafka Connector.exe
-!Output/Magic Boar Kafka Connector-Setup.exe
-!README.MD
+!README.md
+
+# Unignore entire resources folder
+!resources/
+!resources/**
+
+# Unignore entire dist folder
+!dist/
+!dist/**
+
+# Unignore entire Output folder
+!Output/
+!Output/**
