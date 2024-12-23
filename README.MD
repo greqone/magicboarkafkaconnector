@@ -15,11 +15,17 @@ Some might call it a _“Kafka Connector”_, but I prefer “that wacky script 
 ### 1. Running from Source
 
 1. Clone this repo with your favorite method:
+```sh
    git clone https://github.com/greqone/MagicBoarKafkaConnector.git
+   ```
 2. Install dependencies:
+```sh
    pip install -r requirements.txt
+   ```
 3. Launch the script:
+```sh
    python main_gui_v2.py
+   ```
 
 Then watch it do its Kafka magic.
 
@@ -30,28 +36,34 @@ If you’re too cool to deal with dependencies, there's a portable EXE inside th
 If you’re more of a “click Next > Next > Finish” type, there's an installer in Output/. It's conveniently named Magic Boar Kafka Connector-Setup.exe. Run it, let it do its thing, and soon you'll be politely bossing Kafka around.
 
 # Files & Folders
-main_gui_v2.py – The main code for all your Kafka conquests.
-resources/ – Holds logo.ico & background.png or whatever fancy assets you want.
-dist/ – Houses the portable EXE once PyInstaller does its dance.
-Output/ – Holds the snazzy installer if you're feeling official.
+main_gui_v2.py – The main code for all your Kafka conquests.<br>
+resources/ – Holds logo.ico & background.png or whatever fancy assets you want.<br>
+dist/ – Houses the portable EXE once PyInstaller does its dance.<br>
+Output/ – Holds the snazzy installer if you're feeling official.<br>
 
 # Requirements
 Python 3.12+ (Because we like to live on the cutting edge)
+```sh
 PyQt5
 kafka-python-ng
-
+```
 More details in requirements.txt.
 
 # Running from Source (Detailed)
 Create a virtual environment:
+```sh
    python -m venv .venv
    source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+   ```
 Install dependencies:
+```sh
    pip install --upgrade pip
    pip install -r requirements.txt
+   ```
 Run it:
+```sh
    python main_gui_v2.py
-
+```
 Enjoy your Kafka wizardry.
 
 
