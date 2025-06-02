@@ -884,7 +884,15 @@ class ConsumeThread(QtCore.QThread):
             for message in self.consumer:
                 if not self._is_running:
                     break
-                msg = f"Offset: {message.offset}, Key: {message.key}, Value: {message.value.decode('utf-8')}"
+                value = message.value
+                if value is not None:
+                    try:
+                        decoded = value.decode('utf-8', errors='replace')
+                    except Exception:
+                        decoded = str(value)
+                else:
+                    decoded = ""
+                msg = f"Offset: {message.offset}, Key: {message.key}, Value: {decoded}"
                 self.message_signal.emit(msg)
                 logging.debug(f"Message: {message}")
         except Exception as e:
