@@ -8,6 +8,7 @@
 !requirements.txt
 !main_gui_v2.py
 !README.md
+!DESIGN_ANALYSIS.md
 
 # Unignore entire resources folder
 !resources/
