@@ -49,6 +49,46 @@ class SettingsDialog(QtWidgets.QDialog):
         self.limit_spinbox.setValue(self.parent.settings.get('overview_message_limit', 100))
         self.layout.addRow("Message Overview Limit:", self.limit_spinbox)
 
+        # Add separator
+        separator1 = QtWidgets.QFrame()
+        separator1.setFrameShape(QtWidgets.QFrame.HLine)
+        separator1.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.layout.addRow(separator1)
+
+        # Connection retry enabled
+        self.retry_checkbox = QtWidgets.QCheckBox("Enable Connection Retry")
+        self.retry_checkbox.setChecked(self.parent.settings.get('connection_retry_enabled', True))
+        self.layout.addRow(self.retry_checkbox)
+
+        # Connection retry attempts
+        self.retry_attempts_spinbox = QtWidgets.QSpinBox()
+        self.retry_attempts_spinbox.setMinimum(1)
+        self.retry_attempts_spinbox.setMaximum(10)
+        self.retry_attempts_spinbox.setValue(self.parent.settings.get('connection_retry_attempts', 3))
+        self.layout.addRow("Retry Attempts:", self.retry_attempts_spinbox)
+
+        # Connection timeout
+        self.connection_timeout_spinbox = QtWidgets.QSpinBox()
+        self.connection_timeout_spinbox.setMinimum(1)
+        self.connection_timeout_spinbox.setMaximum(300)
+        self.connection_timeout_spinbox.setSuffix(" seconds")
+        self.connection_timeout_spinbox.setValue(self.parent.settings.get('connection_timeout', 10))
+        self.layout.addRow("Connection Timeout:", self.connection_timeout_spinbox)
+
+        # Send timeout
+        self.send_timeout_spinbox = QtWidgets.QSpinBox()
+        self.send_timeout_spinbox.setMinimum(1)
+        self.send_timeout_spinbox.setMaximum(300)
+        self.send_timeout_spinbox.setSuffix(" seconds")
+        self.send_timeout_spinbox.setValue(self.parent.settings.get('send_timeout', 10))
+        self.layout.addRow("Send Timeout:", self.send_timeout_spinbox)
+
+        # Add separator
+        separator2 = QtWidgets.QFrame()
+        separator2.setFrameShape(QtWidgets.QFrame.HLine)
+        separator2.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.layout.addRow(separator2)
+
         # Logging enabled
         self.logging_checkbox = QtWidgets.QCheckBox("Enable Logging")
         self.logging_checkbox.setChecked(self.parent.settings.get('logging_enabled', True))
@@ -119,6 +159,10 @@ class SettingsDialog(QtWidgets.QDialog):
             self.parent.settings['font_size'] = self.selected_font.pointSize()
 
         self.parent.settings['overview_message_limit'] = self.limit_spinbox.value()
+        self.parent.settings['connection_retry_enabled'] = self.retry_checkbox.isChecked()
+        self.parent.settings['connection_retry_attempts'] = self.retry_attempts_spinbox.value()
+        self.parent.settings['connection_timeout'] = self.connection_timeout_spinbox.value()
+        self.parent.settings['send_timeout'] = self.send_timeout_spinbox.value()
         self.parent.settings['logging_enabled'] = self.logging_checkbox.isChecked()
 
         self.parent.config_manager.save_settings(self.parent.settings)

@@ -18,13 +18,13 @@ class KafkaApp(QtWidgets.QMainWindow):
         """Initialize main window."""
         super().__init__()
 
-        # Initialize services and managers
-        self.kafka_service = KafkaService()
+        # Initialize config manager and load configurations first
         self.config_manager = ConfigManager()
-
-        # Load configurations
         self.servers = self.config_manager.load_servers()
         self.settings = self.config_manager.load_settings()
+
+        # Initialize Kafka service with settings
+        self.kafka_service = KafkaService(self.settings)
 
         # UI state
         self.consume_thread = None
@@ -611,6 +611,9 @@ class KafkaApp(QtWidgets.QMainWindow):
         font_size = self.settings.get('font_size', 12)
         font = QtGui.QFont(font_family, font_size)
         self.output_text.setFont(font)
+
+        # Update Kafka service settings
+        self.kafka_service.update_settings(self.settings)
 
     # UI helpers
 

@@ -32,10 +32,23 @@ class MessagesDialog(QtWidgets.QDialog):
         """Initialize UI components."""
         self.layout = QtWidgets.QVBoxLayout(self)
 
+        # Search/Filter box
+        search_layout = QtWidgets.QHBoxLayout()
+        search_label = QtWidgets.QLabel("Filter:")
+        self.search_input = QtWidgets.QLineEdit()
+        self.search_input.setPlaceholderText("Search in messages...")
+        self.search_input.textChanged.connect(self.filter_messages)
+        search_layout.addWidget(search_label)
+        search_layout.addWidget(self.search_input)
+        self.layout.addLayout(search_layout)
+
         # Message list
         self.message_list = QtWidgets.QListWidget()
         self.message_list.currentItemChanged.connect(self.display_message)
         self.layout.addWidget(self.message_list)
+
+        # Store all messages for filtering
+        self.all_messages = []
 
         # Message text display
         self.message_text = QtWidgets.QTextEdit()
@@ -111,8 +124,6 @@ class MessagesDialog(QtWidgets.QDialog):
             if timestamp:
                 item_text += f", Time: {timestamp}"
 
-            item = QtWidgets.QListWidgetItem(item_text)
-
             # Decode and store message value
             value = message.value
             if value is not None:
@@ -120,6 +131,18 @@ class MessagesDialog(QtWidgets.QDialog):
             else:
                 value = ""
 
+            # Store message data for filtering
+            message_data = {
+                'text': item_text,
+                'value': value,
+                'offset': offset,
+                'key': key,
+                'timestamp': timestamp
+            }
+            self.all_messages.append(message_data)
+
+            # Create list item
+            item = QtWidgets.QListWidgetItem(item_text)
             item.setData(QtCore.Qt.UserRole, value)
             self.message_list.addItem(item)
 
@@ -191,6 +214,41 @@ class MessagesDialog(QtWidgets.QDialog):
         """Called when message fetching is complete."""
         if self.message_list.count() == 0:
             self.message_list.addItem("No messages found in topic")
+
+    def filter_messages(self, filter_text):
+        """
+        Filter messages based on search text.
+
+        Args:
+            filter_text: Text to filter by (case-insensitive)
+        """
+        # Clear current list
+        self.message_list.clear()
+
+        # If no filter, show all messages
+        if not filter_text:
+            for msg_data in self.all_messages:
+                item = QtWidgets.QListWidgetItem(msg_data['text'])
+                item.setData(QtCore.Qt.UserRole, msg_data['value'])
+                self.message_list.addItem(item)
+            return
+
+        # Filter messages
+        filter_lower = filter_text.lower()
+        for msg_data in self.all_messages:
+            # Search in display text, value content, key, and offset
+            if (filter_lower in msg_data['text'].lower() or
+                filter_lower in msg_data['value'].lower() or
+                filter_lower in msg_data['key'].lower() or
+                filter_lower in msg_data['offset']):
+
+                item = QtWidgets.QListWidgetItem(msg_data['text'])
+                item.setData(QtCore.Qt.UserRole, msg_data['value'])
+                self.message_list.addItem(item)
+
+        # Show count
+        if self.message_list.count() == 0:
+            self.message_list.addItem(f"No messages matching '{filter_text}'")
 
     def closeEvent(self, event):
         """Handle dialog close event."""

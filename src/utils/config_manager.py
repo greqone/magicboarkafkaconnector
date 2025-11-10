@@ -56,7 +56,11 @@ class ConfigManager:
                 'font_family': 'Segoe UI',
                 'font_size': 12,
                 'logging_enabled': True,
-                'overview_message_limit': 100
+                'overview_message_limit': 100,
+                'connection_retry_enabled': True,
+                'connection_retry_attempts': 3,
+                'connection_timeout': 10,
+                'send_timeout': 10
             }
 
     def save_settings(self, settings):
