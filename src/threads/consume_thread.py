@@ -55,17 +55,23 @@ class ConsumeThread(QThread):
                 return
             self._is_running = False
 
-        # Close consumer in a separate thread to avoid blocking
-        threading.Thread(target=self._close_consumer, daemon=True).start()
+        # Close consumer with timeout to prevent hanging
+        # Use bounded wait instead of daemon thread
+        close_thread = threading.Thread(target=self._close_consumer)
+        close_thread.start()
+        close_thread.join(timeout=5.0)  # Wait up to 5 seconds for graceful close
+
+        if close_thread.is_alive():
+            logging.warning("Consumer close timed out after 5 seconds")
 
     def _close_consumer(self):
         """Close the consumer (called in separate thread)."""
-        try:
-            self.consumer.close()
-        except Exception as e:
-            logging.error(f"Error closing consumer: {e}")
-
-    def is_running(self):
-        """Check if thread is running (thread-safe)."""
+        # Thread-safe access to consumer
         with self._lock:
-            return self._is_running
+            consumer = self.consumer
+
+        if consumer:
+            try:
+                consumer.close()
+            except Exception as e:
+                logging.error(f"Error closing consumer: {e}")

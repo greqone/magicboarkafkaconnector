@@ -1,6 +1,6 @@
 """Resource loading utilities with proper error handling."""
 import sys
-import os
+from pathlib import Path
 
 
 class ResourceNotFoundError(Exception):
@@ -20,7 +20,7 @@ def get_resource_path(filename, required=False):
         required: If True, raises ResourceNotFoundError if file doesn't exist
 
     Returns:
-        Absolute path to the resource file
+        Absolute path to the resource file (as string)
 
     Raises:
         ResourceNotFoundError: If required=True and file doesn't exist
@@ -28,18 +28,19 @@ def get_resource_path(filename, required=False):
     # Try _MEIPASS first (PyInstaller bundle)
     base_path = getattr(sys, '_MEIPASS', None)
     if base_path:
-        path_in_meipass = os.path.join(base_path, filename)
-        if os.path.exists(path_in_meipass):
-            return path_in_meipass
+        path_in_meipass = Path(base_path) / filename
+        if path_in_meipass.exists():
+            return str(path_in_meipass)
 
     # Fallback to local resources folder
-    fallback_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "resources")
-    path_local = os.path.join(fallback_dir, filename)
+    # Navigate from src/utils up to project root, then into resources
+    project_root = Path(__file__).parent.parent.parent
+    path_local = project_root / "resources" / filename
 
-    if required and not os.path.exists(path_local):
+    if required and not path_local.exists():
         raise ResourceNotFoundError(f"Required resource not found: {filename}")
 
-    return path_local
+    return str(path_local)
 
 
 def get_style_path(theme_name):
@@ -50,22 +51,22 @@ def get_style_path(theme_name):
         theme_name: 'light' or 'dark'
 
     Returns:
-        Absolute path to the .qss file
+        Absolute path to the .qss file (as string)
     """
-    # Try _MEIPASS first
+    # Try _MEIPASS first (PyInstaller bundle)
     base_path = getattr(sys, '_MEIPASS', None)
     if base_path:
-        path_in_meipass = os.path.join(base_path, 'styles', f'{theme_name}_theme.qss')
-        if os.path.exists(path_in_meipass):
-            return path_in_meipass
+        path_in_meipass = Path(base_path) / 'styles' / f'{theme_name}_theme.qss'
+        if path_in_meipass.exists():
+            return str(path_in_meipass)
 
     # Fallback to local src/ui/styles folder
-    # Go up from src/utils to src
-    src_dir = os.path.dirname(os.path.dirname(__file__))
-    path_local = os.path.join(src_dir, 'ui', 'styles', f'{theme_name}_theme.qss')
+    # Navigate from src/utils to src/ui/styles
+    src_dir = Path(__file__).parent.parent  # src/utils -> src
+    path_local = src_dir / 'ui' / 'styles' / f'{theme_name}_theme.qss'
 
-    if os.path.exists(path_local):
-        return path_local
+    if path_local.exists():
+        return str(path_local)
 
     raise ResourceNotFoundError(f"Theme stylesheet not found: {theme_name}_theme.qss")
 

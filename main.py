@@ -14,6 +14,7 @@ import sys
 from PyQt5 import QtWidgets, QtCore
 from src.ui.main_window import KafkaApp
 from src.utils.logger import setup_logging
+from src.constants import APP_NAME, APP_ORG
 
 
 def main():
@@ -22,8 +23,8 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
 
     # Set application metadata
-    QtCore.QCoreApplication.setApplicationName("Magic Boar Kafka Connector")
-    QtCore.QCoreApplication.setOrganizationName("MagicBoar")
+    QtCore.QCoreApplication.setApplicationName(APP_NAME)
+    QtCore.QCoreApplication.setOrganizationName(APP_ORG)
 
     # Setup logging (will be configured by settings later)
     setup_logging(enabled=True)

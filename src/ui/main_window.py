@@ -403,7 +403,7 @@ class KafkaApp(QtWidgets.QMainWindow):
             return
 
         # Don't allow multiple simultaneous consumption
-        if self.consume_thread and self.consume_thread.is_running():
+        if self.consume_thread and self.consume_thread.isRunning():
             QtWidgets.QMessageBox.warning(
                 self,
                 "Already Consuming",
@@ -451,9 +451,9 @@ class KafkaApp(QtWidgets.QMainWindow):
 
     def stop_consuming(self):
         """Stop consuming messages."""
-        if self.consume_thread and self.consume_thread.is_running():
+        if self.consume_thread and self.consume_thread.isRunning():
             self.consume_thread.stop()
-            self.consume_thread.wait()
+            self.consume_thread.wait(5000)  # Wait up to 5 seconds
             self.consume_thread = None
 
             # Hide stop button, show consume button
@@ -630,9 +630,9 @@ class KafkaApp(QtWidgets.QMainWindow):
     def closeEvent(self, event):
         """Handle application close."""
         # Stop consuming if active
-        if self.consume_thread and self.consume_thread.is_running():
+        if self.consume_thread and self.consume_thread.isRunning():
             self.consume_thread.stop()
-            self.consume_thread.wait(1000)
+            self.consume_thread.wait(5000)  # Wait up to 5 seconds
 
         # Disconnect from Kafka
         self.kafka_service.disconnect()

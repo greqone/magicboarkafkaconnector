@@ -50,10 +50,16 @@ class KafkaService:
         last_error = None
         for attempt in range(1, retry_attempts + 1):
             try:
+                # Create clients (don't set config yet - only on success)
+                producer = create_kafka_producer(config)
+                consumer = create_kafka_consumer(config)
+                admin_client = create_kafka_admin(config)
+
+                # All clients created successfully - now update state
+                self.producer = producer
+                self.consumer = consumer
+                self.admin_client = admin_client
                 self.current_config = config
-                self.producer = create_kafka_producer(config)
-                self.consumer = create_kafka_consumer(config)
-                self.admin_client = create_kafka_admin(config)
 
                 logging.info(f"Connected to {config['bootstrap_servers']}")
                 return  # Success!
@@ -62,6 +68,7 @@ class KafkaService:
                 last_error = e
 
                 # Clean up any partially created clients to prevent resource leaks
+                # Note: disconnect() preserves current_config now
                 self.disconnect()
 
                 if attempt < retry_attempts:
@@ -79,18 +86,33 @@ class KafkaService:
         raise Exception(f"Failed to connect after {retry_attempts} attempts: {last_error}")
 
     def disconnect(self):
-        """Close all Kafka connections."""
+        """Close all Kafka connections with proper error handling."""
+        # Close each client with individual error handling
         if self.producer:
-            self.producer.close()
-            self.producer = None
+            try:
+                self.producer.close()
+            except Exception as e:
+                logging.error(f"Error closing producer: {e}")
+            finally:
+                self.producer = None
 
         if self.consumer:
-            self.consumer.close()
-            self.consumer = None
+            try:
+                self.consumer.close()
+            except Exception as e:
+                logging.error(f"Error closing consumer: {e}")
+            finally:
+                self.consumer = None
 
         if self.admin_client:
-            self.admin_client.close()
-            self.admin_client = None
+            try:
+                self.admin_client.close()
+            except Exception as e:
+                logging.error(f"Error closing admin client: {e}")
+            finally:
+                self.admin_client = None
+
+        # Note: We preserve current_config for retry attempts
 
     def is_connected(self):
         """Check if connected to Kafka."""

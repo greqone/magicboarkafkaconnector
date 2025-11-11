@@ -3,6 +3,7 @@ import os
 import datetime
 import logging
 from PyQt5.QtCore import QStandardPaths, QCoreApplication
+from ..constants import APP_NAME, APP_ORG
 
 
 _log_filename = None
@@ -21,8 +22,8 @@ def setup_logging(enabled=True):
     global _log_filename
 
     # Set application metadata for proper AppData path
-    QCoreApplication.setApplicationName("Magic Boar Kafka Connector")
-    QCoreApplication.setOrganizationName("MagicBoar")
+    QCoreApplication.setApplicationName(APP_NAME)
+    QCoreApplication.setOrganizationName(APP_ORG)
 
     # Get AppData directory
     app_data_dir = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
@@ -56,8 +57,8 @@ def get_log_filename():
 
 def get_log_directory():
     """Get the directory where logs are stored."""
-    QCoreApplication.setApplicationName("Magic Boar Kafka Connector")
-    QCoreApplication.setOrganizationName("MagicBoar")
+    QCoreApplication.setApplicationName(APP_NAME)
+    QCoreApplication.setOrganizationName(APP_ORG)
     return QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
 
 

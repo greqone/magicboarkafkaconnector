@@ -2,6 +2,7 @@
 import os
 import json
 from PyQt5.QtCore import QStandardPaths, QCoreApplication
+from ..constants import APP_NAME, APP_ORG
 
 
 class ConfigManager:
@@ -10,8 +11,8 @@ class ConfigManager:
     def __init__(self):
         """Initialize config manager."""
         # Set application metadata
-        QCoreApplication.setApplicationName("Magic Boar Kafka Connector")
-        QCoreApplication.setOrganizationName("MagicBoar")
+        QCoreApplication.setApplicationName(APP_NAME)
+        QCoreApplication.setOrganizationName(APP_ORG)
 
         # Get AppData directory
         self.app_data_dir = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)

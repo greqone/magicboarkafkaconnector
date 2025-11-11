@@ -153,6 +153,7 @@ class MessagesDialog(QtWidgets.QDialog):
         """
         if current:
             self.export_button.setEnabled(True)
+            # Value is already decoded from add_message()
             value = current.data(QtCore.Qt.UserRole)
 
             if value is None:
