@@ -1,7 +1,6 @@
 """Kafka service layer separating business logic from UI."""
 import logging
 import time
-from kafka.errors import KafkaError
 from kafka.admin import NewTopic
 from .client_factory import create_kafka_producer, create_kafka_consumer, create_kafka_admin
 
@@ -43,6 +42,10 @@ class KafkaService:
         if retry_attempts is None:
             retry_attempts = self.settings.get('connection_retry_attempts', 1)
 
+        # If retry is disabled, only try once
+        if not retry_enabled:
+            retry_attempts = 1
+
         # Try to connect with retries
         last_error = None
         for attempt in range(1, retry_attempts + 1):
@@ -57,8 +60,13 @@ class KafkaService:
 
             except Exception as e:
                 last_error = e
+
+                # Clean up any partially created clients to prevent resource leaks
+                self.disconnect()
+
                 if attempt < retry_attempts:
-                    wait_time = 2 ** (attempt - 1)  # Exponential backoff: 1s, 2s, 4s...
+                    # Exponential backoff: waits 1s, 2s, 4s between attempts
+                    wait_time = 2 ** (attempt - 1)
                     logging.warning(
                         f"Connection attempt {attempt}/{retry_attempts} failed: {e}. "
                         f"Retrying in {wait_time}s..."

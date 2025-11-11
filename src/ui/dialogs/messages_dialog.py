@@ -4,6 +4,7 @@ from PyQt5 import QtWidgets, QtCore
 from ...threads.overview_thread import OverviewThread
 from ...highlighters.json_highlighter import JsonHighlighter
 from ...kafka.client_factory import create_kafka_consumer
+from ...utils.kafka_helpers import decode_message_value
 
 
 class MessagesDialog(QtWidgets.QDialog):
@@ -124,12 +125,8 @@ class MessagesDialog(QtWidgets.QDialog):
             if timestamp:
                 item_text += f", Time: {timestamp}"
 
-            # Decode and store message value
-            value = message.value
-            if value is not None:
-                value = value.decode('utf-8', errors='replace')
-            else:
-                value = ""
+            # Decode message value using shared utility
+            value = decode_message_value(message.value)
 
             # Store message data for filtering
             message_data = {

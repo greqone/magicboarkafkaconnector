@@ -60,8 +60,9 @@ def get_style_path(theme_name):
             return path_in_meipass
 
     # Fallback to local src/ui/styles folder
-    src_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-    path_local = os.path.join(src_dir, 'src', 'ui', 'styles', f'{theme_name}_theme.qss')
+    # Go up from src/utils to src
+    src_dir = os.path.dirname(os.path.dirname(__file__))
+    path_local = os.path.join(src_dir, 'ui', 'styles', f'{theme_name}_theme.qss')
 
     if os.path.exists(path_local):
         return path_local

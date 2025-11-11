@@ -1,4 +1,4 @@
-"""JSON syntax highlighter using QRegularExpression (Qt6 compatible)."""
+"""JSON syntax highlighter using QRegularExpression (Qt5/Qt6 compatible)."""
 from PyQt5.QtCore import QRegularExpression
 from PyQt5.QtGui import QSyntaxHighlighter, QTextCharFormat, QColor
 

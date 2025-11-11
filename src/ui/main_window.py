@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from ..kafka.kafka_service import KafkaService
 from ..utils.config_manager import ConfigManager
 from ..utils.resource_loader import get_resource_path, load_stylesheet, ResourceNotFoundError
-from ..utils.validators import validate_topic_name, validate_positive_int
+from ..utils.validators import validate_topic_name
 from ..threads.consume_thread import ConsumeThread
 from .dialogs.server_dialog import ServerDialog
 from .dialogs.settings_dialog import SettingsDialog

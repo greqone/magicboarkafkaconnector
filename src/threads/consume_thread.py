@@ -2,6 +2,7 @@
 import logging
 import threading
 from PyQt5.QtCore import QThread, pyqtSignal
+from ..utils.kafka_helpers import decode_message_value
 
 
 class ConsumeThread(QThread):
@@ -33,15 +34,8 @@ class ConsumeThread(QThread):
                     if not self._is_running:
                         break
 
-                # Decode message value
-                value = message.value
-                if value is not None:
-                    try:
-                        decoded = value.decode('utf-8', errors='replace')
-                    except Exception:
-                        decoded = str(value)
-                else:
-                    decoded = ""
+                # Decode message value using shared utility
+                decoded = decode_message_value(message.value)
 
                 # Emit message
                 msg = f"Offset: {message.offset}, Key: {message.key}, Value: {decoded}"
