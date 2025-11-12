@@ -7,7 +7,15 @@
 # Unignore core files
 !requirements.txt
 !main_gui_v2.py
+!main.py
 !README.md
+!DESIGN_ANALYSIS.md
+!REFACTORING_SUMMARY.md
+!ADDITIONAL_FEATURES.md
+
+# Unignore entire src folder
+!src/
+!src/**
 
 # Unignore entire resources folder
 !resources/
@@ -20,3 +28,8 @@
 # Unignore entire Output folder
 !Output/
 !Output/**
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
